@@ -17,9 +17,11 @@ class vanillaWaveNet(nn.Module):
         self.lin1 = nn.Linear(args.conv_out_channels, 1).to(args.device)
         self.tanh = nn.Tanh().to(args.device)
         self.lin2 = nn.Linear(args.train_seq_len, args.val_seq_len).to(args.device)
+        self.dropout = nn.Dropout()
 
     def forward(self, x):
         out = self.stackedConv(x).transpose(1, 2)
+        out = self.dropout(out)
         out = self.lin1(out)
         out = self.tanh(out).squeeze()
         out = self.lin2(out)
