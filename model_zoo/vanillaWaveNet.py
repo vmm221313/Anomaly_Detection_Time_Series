@@ -1,5 +1,3 @@
-# ls
-
 import torch
 import torch.nn as nn
 from model_zoo.custom_layers.causal_conv import CausalConv1d
@@ -21,7 +19,7 @@ class vanillaWaveNet(nn.Module):
 
     def forward(self, x):
         out = self.stackedConv(x).transpose(1, 2)
-        out = self.dropout(out)
+        #out = self.dropout(out)
         out = self.lin1(out)
         out = self.tanh(out).squeeze()
         out = self.lin2(out)
