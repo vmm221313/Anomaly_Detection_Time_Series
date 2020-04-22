@@ -19,7 +19,7 @@ optimizer = optim.SGD(model.parameters(), lr=args.learning_rate, weight_decay=ar
 
 trainer = Trainer(model, criterion, optimizer, args)
 
-trainer.train(plot_losses=True)
+trainer.train(print_losses=True, plot_losses=True, plot_predictions=True)
 
 
 
