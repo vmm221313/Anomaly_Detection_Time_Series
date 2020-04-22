@@ -3,3 +3,4 @@ model_zoo/.ipynb_checkpoints/
 utils/.ipynb_checkpoints/
 utils/__pycache__/
 .ipynb_checkpoints/
+__pycache__/
