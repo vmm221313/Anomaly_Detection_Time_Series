@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from model_zoo.custom_layers.causal_conv import CausalConv1d
 
-class vanillaWaveNet(nn.Module):
+class WaveNet(nn.Module):
     def __init__(self, args):
         super(vanillaWaveNet, self).__init__()
         

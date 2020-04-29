@@ -7,9 +7,20 @@ from torch.utils.data import Dataset, DataLoader
 class dataset(Dataset):
     def __init__(self, file_path, args):
         
-        self.df = po.read_csv(file_path)
-        self.data = (self.df['W'] - self.df['W'].mean())/self.df['W'].std()
-        self.dates = self.df['Date']
+        if type(file_path) == str: 
+            self.df = po.read_csv(file_path)
+            self.data = (self.df['W'] - self.df['W'].mean())/self.df['W'].std()
+            
+        elif type(file_path) == list:
+            df = po.DataFrame()
+            for file in file_path:
+                df_t = po.read_csv(file)
+                df = po.concat([df, df_t], axis = 0, ignore_index = True)
+
+            self.df = df.reset_index(drop = True)
+            self.data = (self.df['0'] - self.df['0'].mean())/self.df['0'].std()
+            
+        #self.dates = self.df['Date']
         self.data = torch.tensor(self.data.values, dtype = torch.float)
         
         self.idx = 0
