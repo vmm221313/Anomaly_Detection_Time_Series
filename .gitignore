@@ -4,3 +4,6 @@ utils/.ipynb_checkpoints/
 utils/__pycache__/
 .ipynb_checkpoints/
 __pycache__/
+data/processed/
+data/raw/
+
