@@ -87,21 +87,13 @@ def derivative_dtw_distance(i, j, x, y):
     return dist
 
 
-x = np.random.randn(8, 1)
-y = np.random.randn(11, 1)
-
-d, cost_matrix, acc_cost_matrix, path = dtw(x, y, dist=derivative_dtw_distance)
-
-d
-
-plt.imshow(acc_cost_matrix.T, origin='lower', cmap='gray', interpolation='nearest')
-plt.plot(path[0], path[1], 'w')
-plt.show()
-
 df_17 = po.read_csv('../data/processed/2017_cleaned_for_imputation.csv')
 
-plt.figure(figsize=(20,10))
-plt.plot(df_17['W'][:288*10])
+df_17.isnull().sum()
+
+plt.figure(figsize=(40,20))
+plt.plot(df_17['W'])
+plt.savefig('../Outputs/DataAnalysis/raw_data_before_imputation.png')
 
 df_17.iloc[93]
 
@@ -110,16 +102,18 @@ x = df_17['W'].values.copy()
 plt.figure(figsize=(20,10))
 plt.plot(x[:288*10])
 
-step = 5
+step = 10
+
+len(df_17)/350
 
 missing_indices = []
-for j in tqdm(range(93, 1000)):
+for j in tqdm(range(93, 100734)):
     if np.isnan(x[j]):
         missing_indices.append(j)
         
     if len(missing_indices)!=0 and not np.isnan(x[j]):
-        Da = x[missing_indices[-1]+1:]
-        Db = x[:missing_indices[0]]
+        Da = x[missing_indices[-1]+1:missing_indices[-1]+1+288*7]
+        Db = x[missing_indices[0]-288*7:missing_indices[0]]
         Qa = Da[:len(missing_indices)]
         Qb = Db[-len(missing_indices):]
         
@@ -158,154 +152,64 @@ for j in tqdm(range(93, 1000)):
                 prev_win = Da[i - len(missing_indices): i + len(missing_indices) - len(missing_indices)]
                 #print('New minima found')
         
-        x[missing_indices] = (prev_win+next_win)/2
+        if len(prev_win) == len(next_win) != 0:
+            x[missing_indices] = (prev_win+next_win)/2
+        
+        elif len(prev_win) != 0:
+            x[missing_indices] = prev_win
+            
+        elif len(next_win) != 0:
+            x[missing_indices] = next_win
         
         missing_indices = []
 
 plt.figure(figsize=(20,10))
-plt.plot(df_17['W'][:288*5])
+plt.plot(df_17['W'][:288*10])
 
-plt.figure(figsize=(20,10))
-plt.plot(x[:288*10])
+df_x = po.DataFrame(x)
 
+df_x.to_csv('../data/processed/2017_imputed.csv', index = False)
 
+plt.figure(figsize=(40,20))
+plt.plot(x[:288*7])
 
+df_x.isnull().sum()
 
+df_17['W'] = x
 
+plt.figure(figsize=(40,20))
+plt.plot(df_17[:288*21]['W'])
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-len(missing_indices)
-
-Da = x[missing_indices[-1]+1:]
-Db = x[:missing_indices[0]]
-
-Qa = Da[:len(missing_indices)]
-Qb = Db[-len(missing_indices):]
-
-len(Db[-len(missing_indices):])
-
-len(Db)
-
-200000000000000<np.inf
-
-step = 1
-
-dtw_costs_b = []
-next_win = ''
-min_cost_b = np.inf
-most_similar_win_b = ''
-for i in range(len(missing_indices), len(Db)-len(missing_indices),  step):
-    ref_win = Db[i - len(missing_indices):i]
-    if np.sum(ref_win == Qb) > 0:
-        print(ref_win)
-        raise ValueError
-    d, cost_matrix, acc_cost_matrix, path = dtw(Qb, ref_win, dist=derivative_dtw_distance)
-    dtw_costs_b.append(d)
-    if d<min_cost_b:
-        min_cost_b = d
-        most_similar_win_b = ref_win
-        next_win = Db[i + len(missing_indices) - len(missing_indices):i + len(missing_indices)]
-        print('New minima found')
-
-plt.plot(Qb, color='blue')
-plt.plot(most_similar_win_b, color='red')
-plt.plot(next_win, color='yellow')
-
-next_win
-
-dtw_costs_a = []
-min_cost_a = np.inf
-prev_win = ''
-most_similar_win_a = ''
-for i in tqdm(range(len(missing_indices), len(Da)-len(missing_indices),  step)):
-    ref_win = Da[i: i + len(missing_indices)]
-    if np.sum(ref_win == Qa) > 0:
-        print(ref_win)
-        print(Qa)
-        raise ValueError
-    d, cost_matrix, acc_cost_matrix, path = dtw(Qa, ref_win, dist=derivative_dtw_distance)
-    dtw_costs_a.append(d)
-    if d<min_cost_a:
-        min_cost_a = d
-        most_similar_win_a = ref_win
-        prev_win = Da[i - len(missing_indices): i + len(missing_indices) - len(missing_indices)]
-        print('New minima found')
-
-plt.plot(Qa, color='blue')
-plt.plot(most_similar_win_a, color='red')
-plt.plot(prev_win, color='yellow') 
-
-prev_win
-
-plt.plot(prev_win, color='blue')
-plt.plot(next_win, color='red')
-
-x_c = x.copy()
+df_17_copy = df_17.copy()
 
 df_17.isnull().sum()
 
-plt.figure(figsize=(20,10))
-plt.plot(df_17['W'][:288*10])
+#taking care of remaining nans
+for i in range(len(df_17)):
+    if np.isnan(df_17['W'][i]):
+        
+        surrounding_values = []
+        for j in range(-10, 10, 2):
+            try:
+                if np.isnan(df_17['W'][i+288*7*j]): 
+                    continue
+                surrounding_values.append(df_17['W'][i+288*7*j])
+            except KeyError:
+                pass
+        
+        df_17['W'][i] = np.mean(np.array(surrounding_values)) 
 
-x[missing_indices]
+df_17.isnull().sum()
 
-x[missing_indices] = (prev_win+next_win)/2
+plt.figure(figsize=(40,20))
+plt.plot(df_17[:288*21])
 
-x[missing_indices]
+df_17.to_csv('../data/processed/2017_fully_imputed.csv', index=False)
 
-x[missing_indices].shape
+df_17_uni = po.DataFrame(df_17['W'])
 
-plt.figure(figsize=(20,10))
-plt.plot(df_17['W'][:288*5])
+df_17_uni.to_csv('../data/processed/2017_fully_imputed_univariate_288_everyday_350_days.csv', index=False)
 
-plt.figure(figsize=(20,10))
-plt.plot(x[:288*5])
+plt.plot(df_17_uni)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-DTW_costs = []
-for i in tqdm(range(0, len(Db)-len(missing_indices), step_threshold)):
-    k = i + len(missing_indices) - 1
-    Ri = Db[i:i+len(missing_indices)]
-    d, cost_matrix, acc_cost_matrix, path = dtw(Qb, Ri, dist=derivative_dtw_distance)
-    DTW_costs.append(d) 
-
-a = np.array(DTW_costs)
-
-threshold = np.nanmin(a)
-threshold
-
-i = np.where(a==threshold)[0][0]
-Qbs = Db[i:i+len(missing_indices)]
-
-Qbs
-
-Db[i+len(missing_indices):len(missing_indices)]
-
-
+#
