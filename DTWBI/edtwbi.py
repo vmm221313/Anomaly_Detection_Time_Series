@@ -1,29 +1,9 @@
 import numpy as np
-from numpy import array, zeros, full, argmin, inf, ndim
-from math import isinf
-
-# We define two sequences x, y as numpy array
-# where y is actually a sub-sequence from x
-x = np.array([2, 0, 1, 1, 2, 4, 2, 1, 2, 0]).reshape(-1, 1)
-y = np.array([1, 1, 2, 4, 2, 1, 2, 0]).reshape(-1, 1)
-
-
-
-from dtw import dtw
-
-manhattan_distance = lambda x, y: np.abs(x - y)
-
-type(manhattan_distance)
-
-
-
-
-
-print(d)
-
-# You can also visualise the accumulated cost and the shortest path
+import pandas as po
+from math import isinf 
+from tqdm import tqdm
 import matplotlib.pyplot as plt
-
+from numpy import array, zeros, full, argmin, inf, ndim
 
 
 def _traceback(D):
@@ -94,7 +74,6 @@ def dtw(x, y, dist, warp=1, w=inf, s=1.0):
     return D1[-1, -1], C, D1, path
 
 
-
 def derivative_dtw_distance(i, j, x, y):
     if i+1 == len(x) or j+1 == len(y):
         dist = (x[i] - y[j])**2
@@ -119,6 +98,214 @@ plt.imshow(acc_cost_matrix.T, origin='lower', cmap='gray', interpolation='neares
 plt.plot(path[0], path[1], 'w')
 plt.show()
 
+df_17 = po.read_csv('../data/processed/2017_cleaned_for_imputation.csv')
 
+plt.figure(figsize=(20,10))
+plt.plot(df_17['W'][:288*10])
+
+df_17.iloc[93]
+
+x = df_17['W'].values.copy()
+
+plt.figure(figsize=(20,10))
+plt.plot(x[:288*10])
+
+step = 5
+
+missing_indices = []
+for j in tqdm(range(93, 1000)):
+    if np.isnan(x[j]):
+        missing_indices.append(j)
+        
+    if len(missing_indices)!=0 and not np.isnan(x[j]):
+        Da = x[missing_indices[-1]+1:]
+        Db = x[:missing_indices[0]]
+        Qa = Da[:len(missing_indices)]
+        Qb = Db[-len(missing_indices):]
+        
+        dtw_costs_b = []
+        next_win = ''
+        min_cost_b = np.inf
+        most_similar_win_b = ''
+        for i in range(len(missing_indices), len(Db)-len(missing_indices),  step):
+            ref_win = Db[i - len(missing_indices):i]
+            if np.sum(ref_win == Qb) > 0:
+                print(ref_win)
+                raise ValueError
+            d, cost_matrix, acc_cost_matrix, path = dtw(Qb, ref_win, dist=derivative_dtw_distance)
+            dtw_costs_b.append(d)
+            if d<min_cost_b:
+                min_cost_b = d
+                most_similar_win_b = ref_win
+                next_win = Db[i + len(missing_indices) - len(missing_indices):i + len(missing_indices)]
+                #print('New minima found')
+        
+        dtw_costs_a = []
+        min_cost_a = np.inf
+        prev_win = ''
+        most_similar_win_a = ''
+        for i in range(len(missing_indices), len(Da)-len(missing_indices),  step):
+            ref_win = Da[i: i + len(missing_indices)]
+            if np.sum(ref_win == Qa) > 0:
+                print(ref_win)
+                print(Qa)
+                raise ValueError
+            d, cost_matrix, acc_cost_matrix, path = dtw(Qa, ref_win, dist=derivative_dtw_distance)
+            dtw_costs_a.append(d)
+            if d<min_cost_a:
+                min_cost_a = d
+                most_similar_win_a = ref_win
+                prev_win = Da[i - len(missing_indices): i + len(missing_indices) - len(missing_indices)]
+                #print('New minima found')
+        
+        x[missing_indices] = (prev_win+next_win)/2
+        
+        missing_indices = []
+
+plt.figure(figsize=(20,10))
+plt.plot(df_17['W'][:288*5])
+
+plt.figure(figsize=(20,10))
+plt.plot(x[:288*10])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+len(missing_indices)
+
+Da = x[missing_indices[-1]+1:]
+Db = x[:missing_indices[0]]
+
+Qa = Da[:len(missing_indices)]
+Qb = Db[-len(missing_indices):]
+
+len(Db[-len(missing_indices):])
+
+len(Db)
+
+200000000000000<np.inf
+
+step = 1
+
+dtw_costs_b = []
+next_win = ''
+min_cost_b = np.inf
+most_similar_win_b = ''
+for i in range(len(missing_indices), len(Db)-len(missing_indices),  step):
+    ref_win = Db[i - len(missing_indices):i]
+    if np.sum(ref_win == Qb) > 0:
+        print(ref_win)
+        raise ValueError
+    d, cost_matrix, acc_cost_matrix, path = dtw(Qb, ref_win, dist=derivative_dtw_distance)
+    dtw_costs_b.append(d)
+    if d<min_cost_b:
+        min_cost_b = d
+        most_similar_win_b = ref_win
+        next_win = Db[i + len(missing_indices) - len(missing_indices):i + len(missing_indices)]
+        print('New minima found')
+
+plt.plot(Qb, color='blue')
+plt.plot(most_similar_win_b, color='red')
+plt.plot(next_win, color='yellow')
+
+next_win
+
+dtw_costs_a = []
+min_cost_a = np.inf
+prev_win = ''
+most_similar_win_a = ''
+for i in tqdm(range(len(missing_indices), len(Da)-len(missing_indices),  step)):
+    ref_win = Da[i: i + len(missing_indices)]
+    if np.sum(ref_win == Qa) > 0:
+        print(ref_win)
+        print(Qa)
+        raise ValueError
+    d, cost_matrix, acc_cost_matrix, path = dtw(Qa, ref_win, dist=derivative_dtw_distance)
+    dtw_costs_a.append(d)
+    if d<min_cost_a:
+        min_cost_a = d
+        most_similar_win_a = ref_win
+        prev_win = Da[i - len(missing_indices): i + len(missing_indices) - len(missing_indices)]
+        print('New minima found')
+
+plt.plot(Qa, color='blue')
+plt.plot(most_similar_win_a, color='red')
+plt.plot(prev_win, color='yellow') 
+
+prev_win
+
+plt.plot(prev_win, color='blue')
+plt.plot(next_win, color='red')
+
+x_c = x.copy()
+
+df_17.isnull().sum()
+
+plt.figure(figsize=(20,10))
+plt.plot(df_17['W'][:288*10])
+
+x[missing_indices]
+
+x[missing_indices] = (prev_win+next_win)/2
+
+x[missing_indices]
+
+x[missing_indices].shape
+
+plt.figure(figsize=(20,10))
+plt.plot(df_17['W'][:288*5])
+
+plt.figure(figsize=(20,10))
+plt.plot(x[:288*5])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DTW_costs = []
+for i in tqdm(range(0, len(Db)-len(missing_indices), step_threshold)):
+    k = i + len(missing_indices) - 1
+    Ri = Db[i:i+len(missing_indices)]
+    d, cost_matrix, acc_cost_matrix, path = dtw(Qb, Ri, dist=derivative_dtw_distance)
+    DTW_costs.append(d) 
+
+a = np.array(DTW_costs)
+
+threshold = np.nanmin(a)
+threshold
+
+i = np.where(a==threshold)[0][0]
+Qbs = Db[i:i+len(missing_indices)]
+
+Qbs
+
+Db[i+len(missing_indices):len(missing_indices)]
 
 
