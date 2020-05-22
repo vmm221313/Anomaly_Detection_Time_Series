@@ -1,0 +1,6 @@
+{
+    "encoder_hidden_size": 4,
+    "decoder_hidden_size": 4,
+    "T": 10,
+    "out_feats": 1
+}
