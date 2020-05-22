@@ -1,0 +1,1 @@
+{"val_start": 17280, "test_start": 23040, "train_seq_len": 1152, "val_seq_len": 288, "subsequences": 4, "conv_num_channels": 64, "pool_size": 12, "lstm_hidden_dim": 50, "batch_size": 512, "num_epochs": 25, "save_folder": "weekend_forecast_CNN_LSTM_v2"}

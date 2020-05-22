@@ -1,0 +1,1 @@
+{"val_start": 17280, "test_start": 23040, "train_seq_len": 1728, "val_seq_len": 288, "num_channels": 50, "kernel_size": 12, "batch_size": 512, "num_epochs": 25, "save_folder": "weekend_forecast_Dilated_CNN_v4"}

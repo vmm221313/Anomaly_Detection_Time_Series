@@ -1,0 +1,1 @@
+{"val_start": 72000, "test_start": 86400, "train_seq_len": 2016, "val_seq_len": 288, "batch_size": 1024, "num_epochs": 50, "subsequences": 7, "conv_num_channels": 128, "pool_size": 12, "lstm_hidden_dim": 100, "save_folder": "tune_CNN_LSTM", "logs_dir": "model_checkpoints/tune_CNN_LSTM/logs_dir"}

@@ -1,0 +1,1 @@
+{"val_start": 17280, "test_start": 23040, "train_seq_len": 1152, "val_seq_len": 288, "seasonality": 288, "batch_size": 1024, "num_epochs": 100, "hidden_dim": 100, "theta_1": 288, "theta_2": 288, "nb_blocks_per_stack": 12, "save_folder": "weekend_forecast_NBEATS_v6"}

@@ -1,0 +1,1 @@
+{"val_start": 17280, "test_start": 23040, "train_seq_len": 1152, "val_seq_len": 288, "conv_num_channels": 128, "kernel_size": 12, "dilation_rates": [1, 2, 4, 8, 16, 32, 64, 128], "dropout": 0.2, "batch_size": 256, "num_epochs": 25, "save_folder": "weekend_forecast_Dilated_CNN"}
