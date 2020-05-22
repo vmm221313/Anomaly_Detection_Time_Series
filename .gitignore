@@ -1,9 +1,7 @@
-model_zoo/__pycache__/
-model_zoo/.ipynb_checkpoints/
-utils/.ipynb_checkpoints/
-utils/__pycache__/
-.ipynb_checkpoints/
 data/processed/
 __pycache__/
 data/raw/
-
+*__pycache__*
+*.ipynb_checkpoints*
+*model_checkpoints*
+*.DS_Store*
