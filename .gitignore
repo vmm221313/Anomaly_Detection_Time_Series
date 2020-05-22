@@ -5,3 +5,5 @@ data/raw/
 *.ipynb_checkpoints*
 *model_checkpoints*
 *.DS_Store*
+old_drive_downloads/
+**/.DS_Store
