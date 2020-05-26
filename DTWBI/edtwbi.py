@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as po
-from math import isinf 
 from tqdm import tqdm
+from math import isinf 
 import matplotlib.pyplot as plt
 from numpy import array, zeros, full, argmin, inf, ndim
 
@@ -93,7 +93,7 @@ df_17.isnull().sum()
 
 plt.figure(figsize=(40,20))
 plt.plot(df_17['W'])
-plt.savefig('../Outputs/DataAnalysis/raw_data_before_imputation.png')
+#plt.savefig('../Outputs/DataAnalysis/raw_data_before_imputation.png')
 
 df_17.iloc[93]
 
@@ -167,6 +167,9 @@ plt.figure(figsize=(20,10))
 plt.plot(df_17['W'][:288*10])
 
 df_x = po.DataFrame(x)
+
+plt.figure(figsize=(40,20))
+plt.plot(df_x)
 
 df_x.to_csv('../data/processed/2017_imputed.csv', index = False)
 
