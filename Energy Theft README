@@ -1,0 +1,11 @@
+Energy Theft 
+
+Energy theft occurs when the smart meters at the consumer end report less consumption than the amount actually consumed, either due to intentional tampering or defective meters. 
+
+1. For how to consider technical losses (distribution and transmission losses) see this paper - Electricity theft detection using smart meter data. 
+2. TLs can also be a function of external enviromental factors such as temperature. 
+3. Is it possible for the machines to be intentionally wrongly calibrated by the UPs to report more than the actual consumption (overcharging)? I suspect broadband providers do this. 
+4. In MLR model authors have set bias to 0
+5. Study about significance tests
+6. See the method used by Yip et al. to catch variable energy theft - thy hav addd an xtra coeff to represent theft in on-peak hours seperately. (this seems like crude approach that can easily be fooled by using a complex meter cheating algo (e.g. cheat more when some extra compute power is required (not acc. to any particular schedule))))
+7.  

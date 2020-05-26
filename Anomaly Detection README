@@ -1,0 +1,15 @@
+Anomaly Detection
+ 
+1. HJC information criterion to obtain optimum lag order
+2. #Quantile regression using Pinball loss to measure uncertainty of the forecast
+3. #Evaluate using - PICP, PINAW, number of anomalies using QR vs using AutoEncoders vs using statistical methods
+
+4. #Grading of quantile intervals & comparison with Z-score
+4.5 #autoencoders (quantiles to AE?)
+5. More data analysis (increase dims? consider sep dim to pass values for same day of prev week?)
+6. Code NBEATS to understand how it works (also upgrade to tf2)
+7. Read HTM paper
+8. Read time series outliers chapter of Charu Aggarwal 
+9. Read "What my deep model doesn't know blog"
+
+#DOC FOR GS
