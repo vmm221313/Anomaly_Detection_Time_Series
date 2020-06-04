@@ -7,3 +7,4 @@ data/raw/
 *.DS_Store*
 old_drive_downloads/
 **/.DS_Store
+*model_*
